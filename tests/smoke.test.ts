@@ -76,6 +76,7 @@ const PAGES: PageEntry[] = [
   { file: 'integrations/page.tsx', load: () => import('@/app/integrations/page') },
   { file: 'integrations/whatsapp/page.tsx', load: () => import('@/app/integrations/whatsapp/page') },
   { file: 'roadmap/page.tsx', load: () => import('@/app/roadmap/page') },
+  { file: 'herdr/page.tsx', load: () => import('@/app/herdr/page') },
   { file: 'analytics/page.tsx', load: () => import('@/app/analytics/page') },
   { file: 'lab/page.tsx', load: () => import('@/app/lab/page'), props: { searchParams: {} } },
   // Content Lab v2 route shells (S0); lane V replaces each with its page and keeps these entries.

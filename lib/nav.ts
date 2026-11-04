@@ -40,6 +40,7 @@ import {
   Magnet,
   Gauge,
   type LucideIcon,
+  TerminalSquare,
 } from 'lucide-react';
 import { ENGINE_HREF, ENGINE_KEYWORDS, ENGINE_NAME, LEGACY_ENGINE_HREF } from '@/lib/creative-engine/name';
 
@@ -134,6 +135,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { href: '/workflows', label: 'Workflows', icon: Workflow, keywords: 'automations canvas steps flows' },
       { href: '/skills', label: 'Skills', icon: Sparkles, keywords: 'capabilities skill library abilities' },
       { href: '/compute', label: 'Compute', icon: MonitorSmartphone, keywords: 'cloud computers machines desktops miosa' },
+      { href: '/herdr', label: 'Herdr', icon: TerminalSquare, keywords: 'herdr sessions terminal claude panes workspaces' },
     ],
   },
   {

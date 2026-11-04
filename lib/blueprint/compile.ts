@@ -153,6 +153,7 @@ const SURFACE_ICON: Record<string, string> = {
   '/setup': 'wrench',
   '/integrations': 'plug',
   '/roadmap': 'map',
+  '/herdr': 'terminal-square',
   '/analytics': 'bar-chart-3',
   '/lab': 'flask-conical',
   '/clients': 'briefcase',

@@ -22,14 +22,14 @@ describe('nav model (SPEC S12 tree A)', () => {
     expect(NAV_GROUPS[0].label).toBe('Command');
   });
 
-  test('exact items per group (29 in all)', () => {
+  test('exact items per group (30 in all)', () => {
     expect(hrefsOf('command')).toEqual(['/', '/wizard', '/inbox']);
     expect(hrefsOf('revenue')).toEqual(['/funnel', '/brand-deals', '/clients', '/finances', '/trading']);
     expect(hrefsOf('growth')).toEqual(['/social', '/adpilot', '/creative-engine', '/analytics', '/lab', '/lead-magnets']);
-    expect(hrefsOf('workforce')).toEqual(['/agents', '/chats', '/tasks', '/workflows', '/skills', '/compute']);
+    expect(hrefsOf('workforce')).toEqual(['/agents', '/chats', '/tasks', '/workflows', '/skills', '/compute', '/herdr']);
     expect(hrefsOf('knowledge')).toEqual(['/brain', '/database', '/knowledge', '/drift']);
     expect(hrefsOf('system')).toEqual(['/setup', '/integrations', '/usage', '/blueprint', '/roadmap']);
-    expect(NAV_ITEMS).toHaveLength(29);
+    expect(NAV_ITEMS).toHaveLength(30);
   });
 
   test('labels: Brain Files on /database, Creative Engine, Workforce not "Agents > Agents"', () => {
