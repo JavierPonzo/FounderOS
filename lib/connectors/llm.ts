@@ -117,9 +117,39 @@ export function createGatewayProvider(model: string = DEFAULT_MODEL): LlmProvide
   };
 }
 
+/** Transcript in, one reply out: the CLI takes a single prompt, so the turns are written into it. */
+export function claudeCodePrompt(req: LlmChatRequest): string {
+  const turns = req.messages
+    .filter((m) => m.role === 'user' || m.role === 'assistant')
+    .map((m) => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`);
+  return [req.system ? `${req.system}\n` : '', ...turns, 'Assistant:'].join('\n');
+}
+
+/**
+ * Chat through the local `claude` CLI, on the operator's own Claude login (a
+ * Max plan needs no API key). In-app tools are not offered: the CLI cannot call
+ * back into this process, so `toolCalls` stays empty.
+ */
+export const claudeCodeProvider: LlmProvider = {
+  name: 'claude_code',
+  async chat(req) {
+    const { execFile } = await import('node:child_process');
+    const { extractReplyText } = await import('@/app/api/workflows/draft/logic');
+    const args = ['-p', claudeCodePrompt(req), '--output-format', 'json', '--max-turns', '1'];
+    if (req.model && !req.model.includes('/')) args.push('--model', req.model);
+    const stdout = await new Promise<string>((resolve, reject) => {
+      execFile('claude', args, { timeout: 180_000, maxBuffer: 8 * 1024 * 1024 }, (err, out, stderr) =>
+        err ? reject(new Error((stderr?.trim() || err.message).slice(0, 400))) : resolve(out),
+      );
+    });
+    return { text: extractReplyText(stdout), toolCalls: [] };
+  },
+};
+
 export function getLlmProvider(): LlmProvider {
   const name = process.env.LLM_PROVIDER ?? 'gateway';
   if (name === 'stub') return stubLlmProvider;
+  if (name === 'claude_code') return claudeCodeProvider;
   return createGatewayProvider();
 }
 
@@ -131,6 +161,9 @@ export async function llmStatus(): Promise<ConnectorStatus> {
   const base = { id: 'llm', name: 'LLM (Gateway)', kind: 'orchestration' } as const;
   if (process.env.LLM_PROVIDER === 'stub') {
     return { ...base, state: 'connected', detail: 'stub provider active (tests)' };
+  }
+  if (process.env.LLM_PROVIDER === 'claude_code') {
+    return { ...base, name: 'LLM (Claude Code)', state: 'connected', detail: 'local claude CLI on the operator login, no in-app tools' };
   }
   const key = resolveGatewayKey();
   if (!key) {
